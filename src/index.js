@@ -157,7 +157,7 @@ app.post("/upload", upload.single("photo"), async (req, res) => {
 //edit
 app.post("/update", async (req, res) => {
   const productId =req.body.id
-  console.log(productId);
+  
   const updatedData = {
     name: req.body.editName, 
     description: req.body.editDescription, 
