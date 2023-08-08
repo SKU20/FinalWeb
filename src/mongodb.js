@@ -35,10 +35,6 @@ const LogInSchema = new mongoose.Schema({
     }
 })
 const productSchema = new mongoose.Schema({
-    ID:{
-        type:Number,
-        required:true
-    },
     name:{
         type:String,
         rquired:true

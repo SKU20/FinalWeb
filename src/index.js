@@ -137,7 +137,6 @@ const upload = multer({ storage: storage });
 //product upload
 app.post("/upload", upload.single("photo"), async (req, res) => {
   const info = {
-    ID:req.body.ID,
     name: req.body.name,
     description: req.body.description,
     price: req.body.price,
@@ -157,7 +156,6 @@ app.post("/upload", upload.single("photo"), async (req, res) => {
 //edit
 app.post("/update", async (req, res) => {
   const productId =req.body.id
-  
   const updatedData = {
     name: req.body.editName, 
     description: req.body.editDescription, 
@@ -176,7 +174,18 @@ app.post("/update", async (req, res) => {
     res.status(500).send('An error occurred.');
   }
 });
+app.get("/delete/:productId", async (req, res) => {
+  const productId = req.params.productId;
 
+  try {
+    const product = await productCollection.deleteOne({ _id: new ObjectId(productId) });
+    const products = await productCollection.find({}).exec();
+    res.render("admin",{products});
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).send('An error occurred.');
+  }
+});
 
 app.listen(3001,()=>{
     console.log("prot Connected")

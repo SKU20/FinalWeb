@@ -202,7 +202,7 @@
                     <input type="hidden" name="name" value="<%=product.name%>">
                     <input type="hidden" name="description" value="<%=product.description%>">
                     <input type="hidden" name="price" value="<%=product.price%>">
-                    <a href="delete?id=<%= product.name %>" class="remove-link">Remove</a>
+                    <a href="/delete/<%= product._id %>" class="remove-link">Remove</a>
                 </td>
             </tr>
             <%id++;%>
