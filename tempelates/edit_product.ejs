@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 0;
+  }
+
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    margin-top: 50px;
+  }
+
+  .edit-label {
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+
+  .edit-input {
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 14px;
+  }
+
+  .edit-textarea {
+    width: 90%;
+    height: 150px;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    resize: vertical;
+    font-size: 14px;
+  }
+
+  .edit-button {
+    background-color: #007BFF;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  .edit-button:hover {
+    background-color: #0056b3;
+  }
+
+  .error-label {
+    color: #DC3545;
+    font-size: 14px;
+    margin-top: 8px;
+  }
+</style>
+<meta charset="ISO-8859-1">
+<title>Edit product</title>
+</head>
+<body>
+<div class="container">
+  <h2>Edit Product</h2>
+  <form action="/update" method="post">
+    <input type="hidden" name="id" value="<%=info._id%>">
+    <label class="edit-label" for="name">Product Name:</label>
+    <input type="text" name="editName" id="name" class="edit-input" value="<%= info.name %>">
+
+    <label class="edit-label" for="description">Product Description:</label>
+    <textarea name="editDescription" id="description" class="edit-textarea"><%= info.description %></textarea>
+
+    <label class="edit-label" for="price">Product Price:</label>
+    <input type="text" name="editPrice" class="edit-input" value="<%= info.price %>">
+    <input type="submit" value="Save Changes" class="edit-button">
+
+  </form>
+</div>
+</body>
+</html>
