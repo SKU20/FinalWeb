@@ -12,8 +12,8 @@
     }
 
     .header {
-      background: linear-gradient(to bottom right, #FD8451, #FFBD6F);
-      padding: 20px;
+      background:  #FD8451;
+      padding: 7px;
       color: white;
       text-align: center;
     }
@@ -195,7 +195,7 @@
                   <% const truncatedDescription = product.description.length > maxDescriptionLength ? product.description.substring(0, maxDescriptionLength) + '...' : product.description; %>
                   <%= truncatedDescription %>
                 </td>                
-                <td><%= product.price %> USD</td>
+                <td><%= product.price %></td>
                 <td>
                   <a href="/edit_product/<%= product._id %>" class="edit-link">Edit</a>
                   <input type="hidden" name="MID" value="<%=product._id%>">

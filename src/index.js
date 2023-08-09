@@ -5,6 +5,7 @@ const path=require("path")
 const async = require('hbs/lib/async')
 const { collection, productCollection } = require("./mongodb");
 const { ObjectId } = require("mongodb"); 
+const { cp } = require('fs')
 
 const tempelatePath = path.join(__dirname,'../tempelates')
 
@@ -16,6 +17,25 @@ app.use(express.urlencoded({extended:false}))
 app.use('/uploads', express.static('uploads'));
 app.get("/", (req,res)=>{
   res.render("login", { error: null })
+})
+app.get("/home", async (req,res) => {
+  const email = req.body;
+  
+  const user = await collection.findOne(email);
+
+  if(!user){
+    res.render("/login",{error:null})
+  }
+  const data = {
+    name:req.body.name,
+    lastname:req.body.lastname,
+    email:req.body.email,
+    phone:req.body.phone,
+    password:req.body.password,
+    date:req.body.date
+}
+const products = await productCollection.find({}).exec();
+res.render("home",{data,products});
 })
 app.get("/signup", (req,res)=>{
     res.render("signup", { error: null })
@@ -39,7 +59,7 @@ app.get("/edit_product/:productId", async (req, res) => {
   }
 });
 //Passing da data for profile
-app.post("/home", (req,res)=>{
+app.post("/home", async (req,res)=>{
   const data = {
     name:req.body.name,
     lastname:req.body.lastname,
@@ -48,10 +68,13 @@ app.post("/home", (req,res)=>{
     password:req.body.password,
     date:req.body.date
 }
- res.render("home",data);
+const products = await productCollection.find({}).exec();
+ res.render("home",{data,products});
 })
 //Sign up
 app.post("/signup",async (req,res)=>{
+     const email = req.body;
+     
     const user = await collection.findOne({ email });
     
      if(user){
@@ -78,7 +101,7 @@ app.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   const user = await collection.findOne({ email });
-
+  
   if (!user) {
     return res.render("login", { error: "Invalid email or password." });
   }
@@ -105,8 +128,8 @@ app.post("/login", async (req, res) => {
     password: user.password,
     date: user.date
   };
-
-  res.render("home", data);
+  const products = await productCollection.find({}).exec();
+  res.render("home", { data: data, products: products });
 });
 //User profile
 app.post("/profile", async (req,res) => {
@@ -186,6 +209,38 @@ app.get("/delete/:productId", async (req, res) => {
     res.status(500).send('An error occurred.');
   }
 });
+
+app.get("/details/:productId", async (req,res) => {
+  const productId = req.params.productId;
+  const product = await productCollection.findOne({ _id: new ObjectId(productId) });
+  const prodInfo ={
+    name:product.name,
+    description:product.description,
+    price:product.price, 
+    photo:product.photo
+  }
+  const infor = {
+    name:req.body.name,
+    lastname:req.body.lastname,
+    email:req.body.email,
+    phone:req.body.phone,
+    password:req.body.password,
+    date:req.body.date
+}
+    res.render("details",{infor,prodInfo});
+});
+
+app.post("/logout", async (req,res) =>{
+  const email = req.body;
+
+  const user = await collection.findOne(email);
+  const error = "";
+  if(!user){
+   error = "Invalid email or password"
+  }
+
+  res.render("login",{error});
+})
 
 app.listen(3001,()=>{
     console.log("prot Connected")
