@@ -27,16 +27,18 @@ app.get("/home", async (req,res) => {
     res.render("/login",{error:null})
   }
   const data = {
-    name:req.body.name,
-    lastname:req.body.lastname,
-    email:req.body.email,
-    phone:req.body.phone,
-    password:req.body.password,
-    date:req.body.date
+    name:user.name,
+    lastname:user.lastname,
+    email:user.email,
+    phone:user.phone,
+    password:user.password,
+    date:user.date
 }
 const products = await productCollection.find({}).exec();
 res.render("home",{data,products});
 })
+
+
 app.get("/signup", (req,res)=>{
     res.render("signup", { error: null })
 })
@@ -73,8 +75,8 @@ const products = await productCollection.find({}).exec();
 })
 //Sign up
 app.post("/signup",async (req,res)=>{
-     const email = req.body;
-     
+     const {email} = req.body;
+  try{
     const user = await collection.findOne({ email });
     
      if(user){
@@ -93,8 +95,11 @@ app.post("/signup",async (req,res)=>{
 
    await collection.insertMany([data])
     
-   res.render("login", data);
+   res.render("login", {data,error:null});
     }
+  }catch(error){
+    console.error('Error:', error);
+  }
 })
 //Login
 app.post("/login", async (req, res) => {
@@ -213,6 +218,9 @@ app.get("/delete/:productId", async (req, res) => {
 app.get("/details/:productId", async (req,res) => {
   const productId = req.params.productId;
   const product = await productCollection.findOne({ _id: new ObjectId(productId) });
+
+  const user = req.body.email;
+  const info = await collection.findOne(user);
   const prodInfo ={
     name:product.name,
     description:product.description,
@@ -220,12 +228,12 @@ app.get("/details/:productId", async (req,res) => {
     photo:product.photo
   }
   const infor = {
-    name:req.body.name,
-    lastname:req.body.lastname,
-    email:req.body.email,
-    phone:req.body.phone,
-    password:req.body.password,
-    date:req.body.date
+    name:info.name,
+    lastname:info.lastname,
+    email:info.email,
+    phone:info.phone,
+    password:info.password,
+    date:info.date
 }
     res.render("details",{infor,prodInfo});
 });
